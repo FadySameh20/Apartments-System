@@ -1,0 +1,10 @@
+version: '3'
+services:
+  backend:
+    image: nodejs-backend
+    container_name: apartments-system-backend
+    build: ./backend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src
