@@ -24,6 +24,11 @@ export class Project extends Model<ProjectAttributes, ProjectCreationAttributes>
       foreignKey: 'developerId',
       as: 'developer',
     });
+
+    Project.hasMany(models.Apartment, {
+      foreignKey: 'projectId',
+      as: 'apartments',
+    });
   }
 
   static initModel(sequelize: Sequelize): typeof Project {
@@ -39,12 +44,17 @@ export class Project extends Model<ProjectAttributes, ProjectCreationAttributes>
           allowNull: false,
         },
         location: {
-          type: DataTypes.TEXT,
-          allowNull: true,
+          type: DataTypes.STRING,
         },
         developerId: {
           type: DataTypes.INTEGER,
           allowNull: false,
+          references: {
+            model: 'developers',
+            key: 'id',
+          },
+          onUpdate: 'CASCADE',
+          onDelete: 'CASCADE',
         },
         createdAt: {
           type: DataTypes.DATE,
