@@ -1,31 +1,33 @@
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 
-interface DeveloperAttributes {
+interface ProjectAttributes {
   id: number;
   name: string;
-  logo?: string | null;
+  location?: string | null;
+  developerId: number,
   createdAt: Date;
   updatedAt: Date;
 }
 
-interface DeveloperCreationAttributes extends Optional<DeveloperAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ProjectCreationAttributes extends Optional<ProjectAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
-export class Developer extends Model<DeveloperAttributes, DeveloperCreationAttributes> implements DeveloperAttributes {
+export class Project extends Model<ProjectAttributes, ProjectCreationAttributes> implements ProjectAttributes {
   public id!: number;
   public name!: string;
-  public logo!: string | null;
+  public location!: string | null;
+  public developerId!: number;
   public createdAt!: Date;
   public updatedAt!: Date;
 
   static associate(models: any) {
-    Developer.hasMany(models.Project, {
+    Project.belongsTo(models.Developer, {
       foreignKey: 'developerId',
-      as: 'projects',
+      as: 'developer',
     });
   }
 
-  static initModel(sequelize: Sequelize): typeof Developer {
-    Developer.init(
+  static initModel(sequelize: Sequelize): typeof Project {
+    Project.init(
       {
         id: {
           type: DataTypes.INTEGER,
@@ -36,9 +38,13 @@ export class Developer extends Model<DeveloperAttributes, DeveloperCreationAttri
           type: DataTypes.STRING,
           allowNull: false,
         },
-        logo: {
+        location: {
           type: DataTypes.TEXT,
           allowNull: true,
+        },
+        developerId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
         },
         createdAt: {
           type: DataTypes.DATE,
@@ -53,11 +59,11 @@ export class Developer extends Model<DeveloperAttributes, DeveloperCreationAttri
       },
       {
         sequelize,
-        modelName: 'Developer',
-        tableName: 'developers',
+        modelName: 'Project',
+        tableName: 'projects',
         timestamps: true,
       }
     );
-    return Developer;
+    return Project;
   }
 }

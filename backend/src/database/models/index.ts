@@ -16,4 +16,4 @@ const  sequelize = config.url
     if (model.associate) model.associate(db);
   });
 
-export { sequelize, db };
+export { Sequelize, sequelize, db };
