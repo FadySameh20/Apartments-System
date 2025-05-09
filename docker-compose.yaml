@@ -7,7 +7,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - postgres-db
+      postgres-db:
+        condition: service_healthy
     environment:
       DB_NAME: nawy
       DB_USER: user
@@ -28,6 +29,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   
 volumes:
   pgdata:
