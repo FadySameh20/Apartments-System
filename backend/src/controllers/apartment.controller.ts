@@ -1,6 +1,16 @@
 import { Request, Response } from 'express';
 import * as apartmentService from '../services/apartment.service';
 
+export const listApartments = async (_req: Request, res: Response) => {
+  try {
+    const apartments = await apartmentService.getAllApartments();
+    res.json(apartments);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Failed to fetch apartments' });
+  }
+};
+
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
     const apartment = await apartmentService.createApartment(req.body);
