@@ -8,4 +8,4 @@ RUN npm install
 
 COPY . .
 
-CMD ["sh", "-c", "npx sequelize-cli db:migrate && npm run dev"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate dev && npm run dev"]
