@@ -2,7 +2,7 @@
 CREATE TABLE "developers" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "logo" TEXT,
+    "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

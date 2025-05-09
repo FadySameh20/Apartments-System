@@ -16,7 +16,7 @@ datasource db {
 model Developer {
   id        Int       @id @default(autoincrement())
   name      String
-  logo      String?
+  image      String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   projects  Project[]
