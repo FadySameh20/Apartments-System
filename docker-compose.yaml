@@ -10,11 +10,8 @@ services:
       postgres-db:
         condition: service_healthy
     environment:
-      DB_NAME: nawy
-      DB_USER: user
-      DB_PASSWORD: pass
-      DB_HOST: postgres-db
-      DB_PORT: 5432
+      PORT: 3000
+      DATABASE_URL: "postgresql://user:pass@postgres-db:5432/nawy"
     volumes:
     - ./backend/src:/app/src
 
