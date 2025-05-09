@@ -3,6 +3,7 @@ import * as apartmentService from '../services/apartment.service';
 
 export const listApartments = async (_req: Request, res: Response) => {
   try {
+    console.log("Retrieving apartments list...");
     const apartments = await apartmentService.getAllApartments();
     res.json(apartments);
   } catch (err) {
@@ -13,6 +14,7 @@ export const listApartments = async (_req: Request, res: Response) => {
 
 export const getApartment = async (req: Request, res: Response) => {
   try {
+    console.log("Retrieving apartment details...");
     const id = parseInt(req.params.id);
     const apartment = await apartmentService.getApartmentById(id);
     if (!apartment) {
@@ -27,6 +29,7 @@ export const getApartment = async (req: Request, res: Response) => {
 
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
+    console.log("Creating a new apartment...");
     const apartment = await apartmentService.createApartment(req.body);
     res.status(201).json(apartment);
   } catch (err) {
