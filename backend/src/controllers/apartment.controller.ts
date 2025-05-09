@@ -11,6 +11,20 @@ export const listApartments = async (_req: Request, res: Response) => {
   }
 };
 
+export const getApartment = async (req: Request, res: Response) => {
+  try {
+    const id = parseInt(req.params.id);
+    const apartment = await apartmentService.getApartmentById(id);
+    if (!apartment) {
+      res.status(404).json({ error: 'Apartment not found' });
+      return;
+    }
+    res.json(apartment);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching apartment' });
+  }
+};
+
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
     const apartment = await apartmentService.createApartment(req.body);
