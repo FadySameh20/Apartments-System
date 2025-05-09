@@ -4,7 +4,7 @@
   "description": "A simple listing apartments app that allows the user to see more details about each apartment",
   "main": "server.ts",
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"    
+    "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
     "build": "prisma generate && tsc",
@@ -16,11 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^6.7.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "prisma": "^6.7.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.18",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.1",
     "@types/node": "^22.15.15",
