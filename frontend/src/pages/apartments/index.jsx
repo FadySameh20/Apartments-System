@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import ApartmentsList from '../../components/apartments/ApartmentsList';
 import Header from '../../components/layout/Header';

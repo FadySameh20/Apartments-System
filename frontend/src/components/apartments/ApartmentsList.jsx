@@ -1,70 +1,87 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Container, Typography, Pagination, useMediaQuery, useTheme, Paper, alpha, Grid } from '@mui/material';
 import ApartmentCard from './ApartmentCard';
 import LoadingIndicator from '../common/LoadingIndicator';
 import ErrorMessage from '../common/ErrorMessage';
 import SearchFilters from './SearchFilters';
 import { getApartments } from '../../api/apartments';
+import { getProjects } from '../../api/projects';
+
+const initialFilters = {
+  unitNumber: '',
+  unitName: '',
+  projectId: '',
+};
 
 const ApartmentsList = () => {
   const [apartments, setApartments] = useState([]);
-  const [filteredApartments, setFilteredApartments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState(null);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [filters, setFilters] = useState(initialFilters);
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const projectsLoaded = useRef(false);
   
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const itemsPerPage = isMobile ? 4 : 8;
+  const pageSize = isMobile ? 4 : 8;
   
+  // Fetch projects once
   useEffect(() => {
-    const fetchApartments = async () => {
-      try {
-        setIsLoading(true);
-        const data = await getApartments();
-        setApartments(data);
-        setFilteredApartments(data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load apartments. Please try again later.');
-        console.error('Error fetching apartments:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    
-    fetchApartments();
+    if (!projectsLoaded.current) {
+      const fetchProjects = async () => {
+        setLoadingProjects(true);
+        try {
+          const projectsData = await getProjects();
+          setProjects(projectsData);
+          projectsLoaded.current = true;
+        } catch (error) {
+          console.error('Error fetching projects:', error);
+        } finally {
+          setLoadingProjects(false);
+        }
+      };
+
+      fetchProjects();
+    }
   }, []);
   
+  const fetchApartments = async (currentPage, currentFilters) => {
+    try {
+      setIsLoading(true);
+      const params = {
+        page: currentPage,
+        pageSize,
+        ...currentFilters
+      };
+      
+      const response = await getApartments(params);
+      setApartments(response.data);
+      setTotalPages(response.meta.totalPages);
+      setTotalCount(response.meta.totalCount);
+      setError(null);
+    } catch (err) {
+      setError('Failed to load apartments. Please try again later.');
+      console.error('Error fetching apartments:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    if (!filters || !apartments.length) return;
-    
-    const filtered = apartments.filter(apartment => {
-      // Unit Number filter
-      if (filters.unitNumber && !apartment.unitNumber.toString().includes(filters.unitNumber)) {
-        return false;
-      }
-      
-      // Unit Name filter
-      if (filters.unitName && !apartment.unitName?.toString().toLowerCase().includes(filters.unitName.toLowerCase())) {
-        return false;
-      }
-      
-      // Project filter
-      if (filters.project && !apartment.project?.name?.toLowerCase().includes(filters.project.toLowerCase())) {
-        return false;
-      }
-      
-      return true;
-    });
-    
-    setFilteredApartments(filtered);
-    setPage(1); // Reset to first page when filtering
-  }, [filters, apartments]);
+    fetchApartments(page, filters);
+  }, [page, filters]);
   
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
+    setPage(1); // Reset to first page when applying new filters
+  };
+
+  const handleClearFilters = () => {
+    setFilters(initialFilters);
   };
   
   const handlePageChange = (_event, value) => {
@@ -73,12 +90,7 @@ const ApartmentsList = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  // Calculate pagination
-  const pageCount = Math.ceil(filteredApartments.length / itemsPerPage);
-  const startIndex = (page - 1) * itemsPerPage;
-  const displayedApartments = filteredApartments.slice(startIndex, startIndex + itemsPerPage);
-  
-  if (isLoading) {
+  if (isLoading && apartments.length === 0) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <LoadingIndicator message="Loading apartments..." />
@@ -91,7 +103,7 @@ const ApartmentsList = () => {
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <ErrorMessage 
           message={error} 
-          onRetry={() => window.location.reload()} 
+          onRetry={() => fetchApartments(page, filters)} 
         />
       </Container>
     );
@@ -139,10 +151,18 @@ const ApartmentsList = () => {
         
         {/* Search filters - now handled responsively in the SearchFilters component */}
         <Box sx={{ mb: 4 }}>
-          <SearchFilters onFilterChange={handleFilterChange} />
+          <SearchFilters 
+            onFilterChange={handleFilterChange}
+            onClearFilters={handleClearFilters}
+            filters={filters}
+            projects={projects}
+            loadingProjects={loadingProjects}
+          />
         </Box>
         
-        {displayedApartments.length === 0 ? (
+        {isLoading && <LoadingIndicator />}
+        
+        {!isLoading && apartments.length === 0 ? (
           <Paper 
             sx={{ 
               p: 4, 
@@ -160,67 +180,69 @@ const ApartmentsList = () => {
             </Typography>
           </Paper>
         ) : (
-          <>
-            <Box 
-              sx={{ 
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                mb: 3,
-                px: 2,
-                py: 1.5,
-                backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                borderRadius: 2
-              }}
-            >
-              <Typography 
-                variant="subtitle1" 
+          !isLoading && (
+            <>
+              <Box 
                 sx={{ 
-                  fontWeight: 'medium',
-                  color: theme.palette.primary.main
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  mb: 3,
+                  px: 2,
+                  py: 1.5,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                  borderRadius: 2
                 }}
               >
-                Showing {displayedApartments.length} of {filteredApartments.length} apartments
-              </Typography>
-            </Box>
-            
-            <Grid container spacing={3}>
-              {displayedApartments.map((apartment) => (
-                <Grid 
-                  key={apartment.id}
-                  size={12}
-                  sx={{ display: 'flex' }}
-                >
-                  <ApartmentCard 
-                    apartment={apartment} 
-                  />
-                </Grid>
-              ))}
-            </Grid>
-            
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5, mb: 2 }}>
-              <Pagination 
-                count={pageCount} 
-                page={page} 
-                onChange={handlePageChange} 
-                color="primary"
-                size={isMobile ? "medium" : "large"}
-                siblingCount={isMobile ? 0 : 1}
-                sx={{
-                  '& .MuiPaginationItem-root': {
+                <Typography 
+                  variant="subtitle1" 
+                  sx={{ 
                     fontWeight: 'medium',
-                  },
-                  '& .Mui-selected': {
-                    backgroundColor: theme.palette.primary.main,
-                    color: 'white',
-                    '&:hover': {
-                      backgroundColor: theme.palette.primary.dark,
+                    color: theme.palette.primary.main
+                  }}
+                >
+                  Showing {apartments.length} of {totalCount} apartments
+                </Typography>
+              </Box>
+              
+              <Grid container spacing={3}>
+                {apartments.map((apartment) => (
+                  <Grid 
+                    key={apartment.id}
+                    size={12}
+                    sx={{ display: 'flex' }}
+                  >
+                    <ApartmentCard 
+                      apartment={apartment} 
+                    />
+                  </Grid>
+                ))}
+              </Grid>
+              
+              <Box sx={{ display: 'flex', justifyContent: 'center', mt: 5, mb: 2 }}>
+                <Pagination 
+                  count={totalPages} 
+                  page={page} 
+                  onChange={handlePageChange} 
+                  color="primary"
+                  size={isMobile ? "medium" : "large"}
+                  siblingCount={isMobile ? 0 : 1}
+                  sx={{
+                    '& .MuiPaginationItem-root': {
+                      fontWeight: 'medium',
+                    },
+                    '& .Mui-selected': {
+                      backgroundColor: theme.palette.primary.main,
+                      color: 'white',
+                      '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
+                      }
                     }
-                  }
-                }}
-              />
-            </Box>
-          </>
+                  }}
+                />
+              </Box>
+            </>
+          )
         )}
       </Container>
     </Box>

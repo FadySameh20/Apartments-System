@@ -1,11 +1,32 @@
 import { Request, Response } from 'express';
 import * as apartmentService from '../services/apartment.service';
+import { PaginationDTO, DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '../dto/pagination.dto';
+import { ApartmentFilterDTO } from '../dto/apartment_filter.dto';
+import { CreateApartmentDTO } from '../dto/create_apartment.dto';
 
-export const listApartments = async (_req: Request, res: Response) => {
+export const listApartments = async (req: Request, res: Response) => {
   try {
     console.log("Retrieving apartments list...");
-    const apartments = await apartmentService.getAllApartments();
-    res.json(apartments);
+    
+    // Extract pagination parameters
+    const pagination: PaginationDTO = {
+      page: parseInt(req.query.page as string) || DEFAULT_PAGE,
+      pageSize: parseInt(req.query.pageSize as string) || DEFAULT_PAGE_SIZE
+    };
+    
+    // Extract filter parameters
+    const filters: ApartmentFilterDTO = {
+      unitNumber: req.query.unitNumber as string || undefined,
+      unitName: req.query.unitName as string || undefined,
+      projectId: req.query.projectId as string || undefined,
+    };
+    
+    const apartmentsResponse = await apartmentService.getAllApartments(
+      pagination,
+      filters
+    );
+    
+    res.json(apartmentsResponse);
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: 'Failed to fetch apartments' });

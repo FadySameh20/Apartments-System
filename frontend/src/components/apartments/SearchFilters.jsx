@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   TextField, 
@@ -19,49 +17,35 @@ import {
   CircularProgress
 } from '@mui/material';
 import { FilterList as FilterIcon, Close as CloseIcon } from '@mui/icons-material';
-import { getProjects } from '../../api/projects';
 
-const initialFilters = {
-  unitNumber: '',
-  unitName: '',
-  projectId: '',
-};
-
-const SearchFilters = ({ onFilterChange }) => {
-  const [filters, setFilters] = useState(initialFilters);
+const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, loadingProjects }) => {
+  const [tempFilters, setTempFilters] = useState(filters);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [projects, setProjects] = useState([]);
-  const [loadingProjects, setLoadingProjects] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setLoadingProjects(true);
-      try {
-        const projectsData = await getProjects();
-        setProjects(projectsData);
-      } catch (error) {
-        console.error('Error fetching projects:', error);
-      } finally {
-        setLoadingProjects(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  // Update tempFilters when filters change from parent
+  React.useEffect(() => {
+    setTempFilters(filters);
+  }, [filters]);
 
   const handleInputChange = (e) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
+    setTempFilters({ ...tempFilters, [e.target.name]: e.target.value });
   };
 
   const handleClearFilters = () => {
-    setFilters(initialFilters);
-    onFilterChange(initialFilters);
+    onClearFilters();
+    setTempFilters(filters);
   };
 
   const applyFilters = () => {
-    onFilterChange(filters);
+    // Send only non-empty filters to the backend
+    const activeFilters = Object.fromEntries(
+      Object.entries(tempFilters).filter(([_, value]) => value !== '')
+    );
+    
+    onFilterChange(activeFilters);
+    
     if (isMobile) {
       setMobileOpen(false);
     }
@@ -100,7 +84,7 @@ const SearchFilters = ({ onFilterChange }) => {
               fullWidth
               label="Unit Number"
               name="unitNumber"
-              value={filters.unitNumber}
+              value={tempFilters.unitNumber}
               onChange={handleInputChange}
               placeholder="Search by unit number..."
               variant="outlined"
@@ -114,7 +98,7 @@ const SearchFilters = ({ onFilterChange }) => {
               fullWidth
               label="Unit Name"
               name="unitName"
-              value={filters.unitName}
+              value={tempFilters.unitName}
               onChange={handleInputChange}
               placeholder="Search by unit name..."
               variant="outlined"
@@ -128,7 +112,7 @@ const SearchFilters = ({ onFilterChange }) => {
               <Select
                 labelId="project-select-label"
                 name="projectId"
-                value={filters.projectId}
+                value={tempFilters.projectId}
                 onChange={handleInputChange}
                 label="Project"
                 disabled={loadingProjects}
@@ -183,7 +167,7 @@ const SearchFilters = ({ onFilterChange }) => {
               fullWidth
               label="Unit Number"
               name="unitNumber"
-              value={filters.unitNumber}
+              value={tempFilters.unitNumber}
               onChange={handleInputChange}
               placeholder="Search by unit number..."
               variant="outlined"
@@ -196,7 +180,7 @@ const SearchFilters = ({ onFilterChange }) => {
               fullWidth
               label="Unit Name"
               name="unitName"
-              value={filters.unitName}
+              value={tempFilters.unitName}
               onChange={handleInputChange}
               placeholder="Search by unit name..."
               variant="outlined"
@@ -210,7 +194,7 @@ const SearchFilters = ({ onFilterChange }) => {
               <Select
                 labelId="project-select-label"
                 name="projectId"
-                value={filters.projectId}
+                value={tempFilters.projectId}
                 onChange={handleInputChange}
                 label="Project"
                 disabled={loadingProjects}

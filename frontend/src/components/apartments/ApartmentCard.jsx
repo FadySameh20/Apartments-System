@@ -1,5 +1,3 @@
-"use client";
-
 import React from 'react';
 import { 
   Card, 
@@ -7,15 +5,12 @@ import {
   CardMedia, 
   Typography, 
   Box, 
-  Chip, 
-  CardActionArea,
-  useMediaQuery,
+  Chip,
   useTheme,
   alpha,
   Paper,
   Stack,
   Button,
-  Divider,
   Grid
 } from '@mui/material';
 import { 
@@ -200,8 +195,9 @@ const ApartmentCard = ({ apartment, onClick }) => {
             sx={{ 
               borderRadius: 1.5,
               px: 3,
-              py: 1,
-              fontWeight: 'bold'
+              py: 3,
+              fontWeight: 'bold',
+              mt: 3,
             }}
           >
             View Details
