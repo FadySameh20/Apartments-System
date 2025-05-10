@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Box, 
   TextField, 
@@ -11,21 +11,45 @@ import {
   useTheme,
   Drawer,
   IconButton,
-  Grid
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress
 } from '@mui/material';
 import { FilterList as FilterIcon, Close as CloseIcon } from '@mui/icons-material';
+import { getProjects } from '../../api/projects';
 
 const initialFilters = {
   unitNumber: '',
   unitName: '',
-  project: '',
+  projectId: '',
 };
 
 const SearchFilters = ({ onFilterChange }) => {
   const [filters, setFilters] = useState(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoadingProjects(true);
+      try {
+        const projectsData = await getProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleInputChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
@@ -99,16 +123,40 @@ const SearchFilters = ({ onFilterChange }) => {
           </Box>
 
           <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              label="Project"
-              name="project"
-              value={filters.project}
-              onChange={handleInputChange}
-              placeholder="Search by project..."
-              variant="outlined"
-              size="small"
-            />
+            <FormControl fullWidth size="small">
+              <InputLabel id="project-select-label">Project</InputLabel>
+              <Select
+                labelId="project-select-label"
+                name="projectId"
+                value={filters.projectId}
+                onChange={handleInputChange}
+                label="Project"
+                disabled={loadingProjects}
+                sx={{
+                  minWidth: '200px',
+                  '& .MuiSelect-select': {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }
+                }}
+              >
+                <MenuItem value="">
+                  <em>All Projects</em>
+                </MenuItem>
+                {loadingProjects ? (
+                  <MenuItem disabled>
+                    <CircularProgress size={20} />
+                  </MenuItem>
+                ) : (
+                  projects.map((project) => (
+                    <MenuItem key={project.id} value={project.id}>
+                      {project.name}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
           </Box>
 
           <Box sx={{ display: 'flex', gap: 1 }}>
@@ -130,7 +178,7 @@ const SearchFilters = ({ onFilterChange }) => {
         </>
       ) : (
         <Grid container spacing={2} alignItems="center">
-          <Grid size={{ xs: 12, sm: 3 }}>
+          <Grid item xs={12} sm={3}>
             <TextField
               fullWidth
               label="Unit Number"
@@ -143,7 +191,7 @@ const SearchFilters = ({ onFilterChange }) => {
             />
           </Grid>
           
-          <Grid size={{ xs: 12, sm: 3 }}>
+          <Grid item xs={12} sm={3}>
             <TextField
               fullWidth
               label="Unit Name"
@@ -156,20 +204,44 @@ const SearchFilters = ({ onFilterChange }) => {
             />
           </Grid>
           
-          <Grid size={{ xs: 12, sm: 3 }}>
-            <TextField
-              fullWidth
-              label="Project"
-              name="project"
-              value={filters.project}
-              onChange={handleInputChange}
-              placeholder="Search by project..."
-              variant="outlined"
-              size="small"
-            />
+          <Grid item xs={12} sm={3}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="project-select-label">Project</InputLabel>
+              <Select
+                labelId="project-select-label"
+                name="projectId"
+                value={filters.projectId}
+                onChange={handleInputChange}
+                label="Project"
+                disabled={loadingProjects}
+                sx={{
+                  minWidth: '200px',
+                  '& .MuiSelect-select': {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }
+                }}
+              >
+                <MenuItem value="">
+                  <em>All Projects</em>
+                </MenuItem>
+                {loadingProjects ? (
+                  <MenuItem disabled>
+                    <CircularProgress size={20} />
+                  </MenuItem>
+                ) : (
+                  projects.map((project) => (
+                    <MenuItem key={project.id} value={project.id}>
+                      {project.name}
+                    </MenuItem>
+                  ))
+                )}
+              </Select>
+            </FormControl>
           </Grid>
           
-          <Grid size={{ xs: 12, sm: 3 }}>
+          <Grid item xs={12} sm={3}>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button 
                 variant="outlined" 

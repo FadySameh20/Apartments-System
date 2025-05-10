@@ -28,7 +28,7 @@ import {
 } from '@mui/icons-material';
 import Header from '../../../components/layout/Header';
 import Footer from '../../../components/layout/Footer';
-import { getApartment } from '../../api/apartments';
+import { getApartment } from '../../../api/apartments';
 import { formatPrice } from '../../../components/apartments/ApartmentCard';
 import Link from 'next/link';
 
@@ -224,7 +224,7 @@ const ApartmentDetailsPage = () => {
                     </Typography>
                     
                     <Grid container spacing={2} sx={{ mb: 3 }}>
-                      <Grid size={{xs: 6, sm: 3 }}>
+                      <Grid size={6}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <BedIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                           <Typography>
@@ -232,7 +232,7 @@ const ApartmentDetailsPage = () => {
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid size={{xs: 6, sm: 3 }}>
+                      <Grid size={6}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <BathtubIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                           <Typography>
@@ -240,7 +240,7 @@ const ApartmentDetailsPage = () => {
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid size={{xs: 6, sm: 3 }}>
+                      <Grid size={6}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <SquareFootIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                           <Typography>
@@ -248,7 +248,7 @@ const ApartmentDetailsPage = () => {
                           </Typography>
                         </Box>
                       </Grid>
-                      <Grid size={{xs: 6, sm: 3 }}>
+                      <Grid size={6}>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                           <ApartmentIcon sx={{ mr: 1, color: theme.palette.primary.main }} />
                           <Typography>

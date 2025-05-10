@@ -4,7 +4,7 @@ import ApartmentCard from './ApartmentCard';
 import LoadingIndicator from '../common/LoadingIndicator';
 import ErrorMessage from '../common/ErrorMessage';
 import SearchFilters from './SearchFilters';
-import { getApartments } from '../../pages/api/apartments';
+import { getApartments } from '../../api/apartments';
 
 const ApartmentsList = () => {
   const [apartments, setApartments] = useState([]);

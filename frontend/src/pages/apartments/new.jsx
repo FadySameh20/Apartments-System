@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -14,13 +14,18 @@ import {
   CircularProgress,
   IconButton,
   useMediaQuery,
-  useTheme
+  useTheme,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel
 } from '@mui/material';
 import { CloudUpload as UploadIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
-import { createApartment } from '../api/apartments';
+import { createApartment } from '../../api/apartments';
+import { getProjects } from '../../api/projects';
 
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -35,6 +40,9 @@ const VisuallyHiddenInput = styled('input')({
 const CreateApartmentPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  
+  const [projects, setProjects] = useState([]);
+  const [loadingProjects, setLoadingProjects] = useState(false);
   
   const [formData, setFormData] = useState({
     unitName: '',
@@ -55,6 +63,23 @@ const CreateApartmentPage = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setLoadingProjects(true);
+      try {
+        const projectsData = await getProjects();
+        setProjects(projectsData);
+      } catch (error) {
+        console.error('Error fetching projects:', error);
+        setError('Failed to load projects');
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -375,18 +400,34 @@ const CreateApartmentPage = () => {
                 </Grid>
 
                 <Grid size={{xs: 12, md: 6}}>
-                  <TextField
-                    name="projectId"
-                    label="Project ID"
-                    type="number"
-                    value={formData.projectId}
-                    onChange={handleInputChange}
-                    fullWidth
-                    required
-                    error={!!errors.projectId}
-                    helperText={errors.projectId}
-                    InputProps={{ inputProps: { min: 1 } }}
-                  />
+                  <FormControl fullWidth required error={!!errors.projectId}>
+                    <InputLabel id="project-select-label">Project</InputLabel>
+                    <Select
+                      labelId="project-select-label"
+                      name="projectId"
+                      value={formData.projectId}
+                      onChange={handleInputChange}
+                      label="Project"
+                      disabled={loadingProjects}
+                    >
+                      {loadingProjects ? (
+                        <MenuItem disabled>
+                          <CircularProgress size={20} />
+                        </MenuItem>
+                      ) : (
+                        projects.map((project) => (
+                          <MenuItem key={project.id} value={project.id}>
+                            {project.name}
+                          </MenuItem>
+                        ))
+                      )}
+                    </Select>
+                    {errors.projectId && (
+                      <Typography color="error" variant="caption">
+                        {errors.projectId}
+                      </Typography>
+                    )}
+                  </FormControl>
                 </Grid>
               </Grid>
               
