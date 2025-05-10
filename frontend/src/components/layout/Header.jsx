@@ -29,10 +29,10 @@ const navItems = [
   { name: 'Apartments', href: '/apartments', icon: <ApartmentIcon /> }
 ];
 
-const Header: React.FC = () => {
+const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);

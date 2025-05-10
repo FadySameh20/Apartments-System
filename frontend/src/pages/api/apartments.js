@@ -1,12 +1,11 @@
 import api from './axios';
-import { Apartment } from '../types';
 
-export const getApartments = async (): Promise<Apartment[]> => {
+export const getApartments = async () => {
   const response = await api.get('/apartments');
   return response.data;
 };
 
-export const getApartment = async (id: number): Promise<Apartment> => {
+export const getApartment = async (id) => {
   const response = await api.get(`/apartments/${id}`);
   return response.data;
 }; 

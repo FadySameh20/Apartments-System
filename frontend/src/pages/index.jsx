@@ -1,11 +1,9 @@
 import React from 'react';
-import Image from 'next/image';
-import { Box, Button, Container, Typography, Paper, alpha } from '@mui/material';
+import { Box, Button, Container, Typography, Paper, alpha, Grid } from '@mui/material';
 import { Search as SearchIcon, LocationOn, Home as HomeIcon, Apartment as ApartmentIcon } from '@mui/icons-material';
 import Link from 'next/link';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
-import Grid from '../components/common/Grid';
 
 export default function Home() {
   return (
@@ -115,7 +113,7 @@ export default function Home() {
             </Typography>
             
             <Grid container direction="column" spacing={4}>
-              <Grid item xs={12} md={4}>
+              <Grid size={12}>
                 <Paper
                   elevation={0}
                   sx={{ 
@@ -156,7 +154,7 @@ export default function Home() {
                 </Paper>
               </Grid>
               
-              <Grid item xs={12} md={4}>
+              <Grid size={12}>
                 <Paper
                   elevation={0}
                   sx={{ 
@@ -196,7 +194,7 @@ export default function Home() {
                 </Paper>
               </Grid>
 
-              <Grid item xs={12} md={4}>
+              <Grid size={12}>
                 <Paper
                   elevation={0}
                   sx={{ 
@@ -243,4 +241,4 @@ export default function Home() {
       <Footer />
     </Box>
   );
-}
+} 

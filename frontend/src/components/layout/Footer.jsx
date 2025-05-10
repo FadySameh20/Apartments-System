@@ -1,16 +1,26 @@
 "use client";
 
 import React from 'react';
-import { Box, Container, Typography, Link as MuiLink, Divider } from '@mui/material';
-import Grid from '../common/Grid';
+import { 
+  Box,
+  Container,
+  Typography,
+  Link as MuiLink,
+  Divider,
+  Grid,
+  useMediaQuery,
+  useTheme,
+ } from '@mui/material';
 import { 
   Mail as MailIcon,
   Phone as PhoneIcon,
   LocationOn as LocationIcon
 } from '@mui/icons-material';
 
-const Footer: React.FC = () => {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
     <Box
@@ -22,10 +32,10 @@ const Footer: React.FC = () => {
         backgroundColor: (theme) => theme.palette.grey[100],
       }}
     >
-      <Container maxWidth="lg">
-        <Grid container spacing={20}>
-          <Grid item xs={12} sm={6} md={3}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
+      <Container>
+        <Grid container spacing={isMobile ? 3 : 20}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+            <Typography variant="h6" gutterBottom fontWeight="bold">
               Nawy Apartments
             </Typography>
             <Typography variant="body2" color="text.secondary" paragraph>
@@ -33,7 +43,7 @@ const Footer: React.FC = () => {
             </Typography>
           </Grid>
           
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 6, lg: 6, xl: 6 }}>
             <Typography variant="h6" gutterBottom>
               Contact Us
             </Typography>

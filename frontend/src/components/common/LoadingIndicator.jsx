@@ -3,11 +3,7 @@
 import React from 'react';
 import { Box, CircularProgress, Typography } from '@mui/material';
 
-interface LoadingIndicatorProps {
-  message?: string;
-}
-
-const LoadingIndicator: React.FC<LoadingIndicatorProps> = ({ 
+const LoadingIndicator = ({ 
   message = 'Loading...' 
 }) => {
   return (

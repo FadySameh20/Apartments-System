@@ -14,7 +14,9 @@ import {
   alpha,
   Paper,
   Stack,
-  Button
+  Button,
+  Divider,
+  Grid
 } from '@mui/material';
 import { 
   Bed as BedIcon, 
@@ -24,15 +26,8 @@ import {
   Star as StarIcon,
   AttachMoney as MoneyIcon
 } from '@mui/icons-material';
-import Grid from '../common/Grid';
-import { Apartment } from '../../types';
 
-interface ApartmentCardProps {
-  apartment: Apartment;
-  onClick?: () => void;
-}
-
-export const formatPrice = (price: number): string => {
+export const formatPrice = (price) => {
   return price.toLocaleString('en-US', {
     style: 'currency',
     currency: 'EGP',
@@ -40,11 +35,9 @@ export const formatPrice = (price: number): string => {
   });
 };
 
-const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onClick }) => {
+const ApartmentCard = ({ apartment, onClick }) => {
   const { unitName, price, bedroomsCount, bathroomsCount, area, images, isFinished, floor } = apartment;
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
 
   return (
     <Card 
@@ -163,7 +156,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onClick }) => 
           }}
         >
           <Grid container spacing={2}>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <BedIcon sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
                 <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -171,7 +164,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onClick }) => 
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <BathtubIcon sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
                 <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -179,7 +172,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onClick }) => 
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <SquareFootIcon sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
                 <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
@@ -187,7 +180,7 @@ const ApartmentCard: React.FC<ApartmentCardProps> = ({ apartment, onClick }) => 
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={6} sm={3}>
+            <Grid size={{ xs: 6, md: 3 }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <ApartmentIcon sx={{ mr: 1, color: theme.palette.primary.main, fontSize: 20 }} />
                 <Typography variant="body2" sx={{ fontWeight: 'medium' }}>

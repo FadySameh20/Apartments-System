@@ -4,12 +4,7 @@ import React from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { Error as ErrorIcon } from '@mui/icons-material';
 
-interface ErrorMessageProps {
-  message: string;
-  onRetry?: () => void;
-}
-
-const ErrorMessage: React.FC<ErrorMessageProps> = ({ 
+const ErrorMessage = ({ 
   message = 'Something went wrong', 
   onRetry 
 }) => {

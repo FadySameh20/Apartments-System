@@ -10,34 +10,24 @@ import {
   useMediaQuery,
   useTheme,
   Drawer,
-  IconButton
+  IconButton,
+  Grid
 } from '@mui/material';
 import { FilterList as FilterIcon, Close as CloseIcon } from '@mui/icons-material';
-import Grid from '../common/Grid';
 
-interface SearchFiltersProps {
-  onFilterChange: (filters: FilterState) => void;
-}
-
-export interface FilterState {
-  unitNumber: string;
-  unitName: string;
-  project: string;
-}
-
-const initialFilters: FilterState = {
+const initialFilters = {
   unitNumber: '',
   unitName: '',
   project: '',
 };
 
-const SearchFilters: React.FC<SearchFiltersProps> = ({ onFilterChange }) => {
-  const [filters, setFilters] = useState<FilterState>(initialFilters);
+const SearchFilters = ({ onFilterChange }) => {
+  const [filters, setFilters] = useState(initialFilters);
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
@@ -140,7 +130,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ onFilterChange }) => {
         </>
       ) : (
         <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <TextField
               fullWidth
               label="Unit Number"
@@ -153,7 +143,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ onFilterChange }) => {
             />
           </Grid>
           
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <TextField
               fullWidth
               label="Unit Name"
@@ -166,7 +156,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ onFilterChange }) => {
             />
           </Grid>
           
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <TextField
               fullWidth
               label="Project"
@@ -179,7 +169,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ onFilterChange }) => {
             />
           </Grid>
           
-          <Grid item xs={12} sm={3}>
+          <Grid size={{ xs: 12, sm: 3 }}>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Button 
                 variant="outlined" 

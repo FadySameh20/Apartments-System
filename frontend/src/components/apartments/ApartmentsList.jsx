@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Container, Typography, Pagination, useMediaQuery, useTheme, Paper, alpha } from '@mui/material';
-import Grid from '../common/Grid';
+import { Box, Container, Typography, Pagination, useMediaQuery, useTheme, Paper, alpha, Grid } from '@mui/material';
 import ApartmentCard from './ApartmentCard';
 import LoadingIndicator from '../common/LoadingIndicator';
 import ErrorMessage from '../common/ErrorMessage';
-import SearchFilters, { FilterState } from './SearchFilters';
+import SearchFilters from './SearchFilters';
 import { getApartments } from '../../pages/api/apartments';
-import { Apartment } from '../../types';
 
-const ApartmentsList: React.FC = () => {
-  const [apartments, setApartments] = useState<Apartment[]>([]);
-  const [filteredApartments, setFilteredApartments] = useState<Apartment[]>([]);
+const ApartmentsList = () => {
+  const [apartments, setApartments] = useState([]);
+  const [filteredApartments, setFilteredApartments] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [filters, setFilters] = useState<FilterState | null>(null);
+  const [filters, setFilters] = useState(null);
   
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const itemsPerPage = isMobile ? 4 : 8;
   
   useEffect(() => {
@@ -66,11 +63,11 @@ const ApartmentsList: React.FC = () => {
     setPage(1); // Reset to first page when filtering
   }, [filters, apartments]);
   
-  const handleFilterChange = (newFilters: FilterState) => {
+  const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };
   
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event, value) => {
     setPage(value);
     // Scroll to top when changing page
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -190,10 +187,8 @@ const ApartmentsList: React.FC = () => {
             <Grid container spacing={3}>
               {displayedApartments.map((apartment) => (
                 <Grid 
-                  item 
-                  key={apartment.id} 
-                  xs={12} 
-                  md={6}
+                  key={apartment.id}
+                  size={12}
                   sx={{ display: 'flex' }}
                 >
                   <ApartmentCard 
