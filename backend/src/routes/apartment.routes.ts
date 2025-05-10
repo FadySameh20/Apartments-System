@@ -7,10 +7,10 @@ import {
 import multer from 'multer';
 
 const apartmentRoutes = Router();
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 
 apartmentRoutes.get('/', listApartments);
 apartmentRoutes.get('/:id', getApartment);
-apartmentRoutes.post('/', upload.none(), createNewApartment);
+apartmentRoutes.post('/', upload.array('images'), createNewApartment);
 
 export default apartmentRoutes;

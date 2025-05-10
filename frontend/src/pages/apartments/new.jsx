@@ -20,7 +20,6 @@ import { CloudUpload as UploadIcon, Delete as DeleteIcon } from '@mui/icons-mate
 import { styled } from '@mui/material/styles';
 import Header from '../../components/layout/Header';
 import Footer from '../../components/layout/Footer';
-import API_CONFIG from '../../config/api';
 import { createApartment } from '../api/apartments';
 
 const VisuallyHiddenInput = styled('input')({
@@ -79,17 +78,17 @@ const CreateApartmentPage = () => {
 
     const newImages = [...images, ...files];
     
-    const base64Images = await Promise.all(
-      Array.from(newImages).map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = error => reject(error);
-        });
-      })
-    );
-    setImages(base64Images);
+    // const base64Images = await Promise.all(
+    //   Array.from(newImages).map(file => {
+    //     return new Promise((resolve, reject) => {
+    //       const reader = new FileReader();
+    //       reader.readAsDataURL(file);
+    //       reader.onload = () => resolve(reader.result);
+    //       reader.onerror = error => reject(error);
+    //     });
+    //   })
+    // );
+    setImages(newImages);
 
     // Create preview URLs for the images
     const newImagePreviewUrls = files.map(file => URL.createObjectURL(file));
@@ -163,11 +162,14 @@ const CreateApartmentPage = () => {
         bedroomsCount: Number(formData.bedroomsCount),
         bathroomsCount: Number(formData.bathroomsCount),
         floor: Number(formData.floor),
-        images: images,
         projectId: Number(formData.projectId),
       };
       
       formDataToSend.append('apartmentData', JSON.stringify(apartmentData));
+      images.forEach((image) => {
+        formDataToSend.append('images', image);
+      });
+
       await createApartment(formDataToSend);
               
       setSuccess(true);

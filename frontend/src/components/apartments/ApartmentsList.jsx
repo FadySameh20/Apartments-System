@@ -193,9 +193,6 @@ const ApartmentsList = () => {
                 >
                   <ApartmentCard 
                     apartment={apartment} 
-                    onClick={() => {
-                      console.log(`Navigate to apartment ${apartment.id}`);
-                    }} 
                   />
                 </Grid>
               ))}

@@ -30,7 +30,17 @@ export const getApartment = async (req: Request, res: Response) => {
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
     console.log("Creating a new apartment...");
-    const apartment = await apartmentService.createApartment(JSON.parse(req.body.apartmentData) as CreateApartmentDTO);
+    const apartmentData = JSON.parse(req.body.apartmentData) as CreateApartmentDTO;
+    const files = req.files as Express.Multer.File[];
+
+    // Convert each file to base64
+    const base64Images = files.map(file => {
+      return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+    });
+
+    // Add base64 strings to apartment data
+    apartmentData.images = base64Images
+    const apartment = await apartmentService.createApartment(apartmentData);
     res.status(201).json(apartment);
   } catch (err) {
     res.status(400).json({ error: 'Error creating apartment', details: err });

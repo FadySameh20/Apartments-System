@@ -26,6 +26,7 @@ import {
   Star as StarIcon,
   AttachMoney as MoneyIcon
 } from '@mui/icons-material';
+import Link from 'next/link';
 
 export const formatPrice = (price) => {
   return price.toLocaleString('en-US', {
@@ -36,7 +37,7 @@ export const formatPrice = (price) => {
 };
 
 const ApartmentCard = ({ apartment, onClick }) => {
-  const { unitName, price, bedroomsCount, bathroomsCount, area, images, isFinished, floor } = apartment;
+  const { id, unitName, price, bedroomsCount, bathroomsCount, area, images, isFinished, floor } = apartment;
   const theme = useTheme();
 
   return (
@@ -120,7 +121,7 @@ const ApartmentCard = ({ apartment, onClick }) => {
                 label={isFinished ? "Finished" : "Not Finished"}
                 size="medium"
                 sx={{
-                  backgroundColor: alpha(theme.palette.success.main, 0.9),
+                  backgroundColor: isFinished ? alpha(theme.palette.success.main, 0.9) : alpha(theme.palette.warning.main, 0.9),
                   color: 'white',
                   fontWeight: 'bold',
                   '& .MuiChip-label': {
@@ -194,7 +195,8 @@ const ApartmentCard = ({ apartment, onClick }) => {
         <Box sx={{ mt: 2, display: 'flex', justifyContent: { xs: 'center', md: 'flex-start' } }}>
           <Button 
             variant="contained"
-            onClick={onClick}
+            component={Link}
+            href={`/apartments/${id}`}
             sx={{ 
               borderRadius: 1.5,
               px: 3,
