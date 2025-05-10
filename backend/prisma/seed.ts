@@ -8,16 +8,12 @@ async function main() {
     await prisma.developer.createMany({
       data: [
         {
-          name: "Skyline Builders",
-          image: "https://example.com/logos/skyline.png",
+          name: "Mountain View",
+          image: "https://developers-eg.com/wp-content/uploads/2024/10/Mountain-View.jpg",
         },
         { 
-          name: "Green Earth Developers", 
-          image: "https://example.com/logos/greenearth.png",
-        },
-        { 
-          name: "Oceanic Estates", 
-          image: "https://example.com/logos/oceanic.png",
+          name: "Orascom", 
+          image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRm_HA4IzV7HROSrjZ5VhPDL-Ndp7fAAS0_iQ&s",
         }
       ]
     });
@@ -30,25 +26,15 @@ async function main() {
     await prisma.project.createMany({
       data: [
         { 
-          name: "Sunset Boulevard", 
-          location: "Los Angeles, CA", 
+          name: "New Giza", 
+          location: "Giza, Egypt", 
           developerId: 1,
         },
         { 
-          name: "Eco Habitat", 
-          location: "Portland, OR", 
+          name: "Al Alamein", 
+          location: "North Coast, Egypt", 
           developerId: 2,
-        },
-        { 
-          name: "Marina View Residences", 
-          location: "Miami, FL", 
-          developerId: 3,
-        },
-        { 
-          name: "Urban Oasis", 
-          location: "Austin, TX", 
-          developerId: 1,
-      }
+        }
       ]
     });
   }  
