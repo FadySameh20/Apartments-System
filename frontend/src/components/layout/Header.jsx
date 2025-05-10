@@ -20,13 +20,15 @@ import {
 import {
   Menu as MenuIcon,
   Home as HomeIcon,
-  Apartment as ApartmentIcon
+  Apartment as ApartmentIcon,
+  AddCircleOutline as AddIcon
 } from '@mui/icons-material';
 import Link from 'next/link';
 
 const navItems = [
   { name: 'Home', href: '/', icon: <HomeIcon /> },
-  { name: 'Apartments', href: '/apartments', icon: <ApartmentIcon /> }
+  { name: 'Apartments', href: '/apartments', icon: <ApartmentIcon /> },
+  { name: 'New', href: '/apartments/new', icon: <AddIcon /> }
 ];
 
 const Header = () => {

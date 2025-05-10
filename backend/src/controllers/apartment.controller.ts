@@ -30,7 +30,7 @@ export const getApartment = async (req: Request, res: Response) => {
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
     console.log("Creating a new apartment...");
-    const apartment = await apartmentService.createApartment(req.body);
+    const apartment = await apartmentService.createApartment(JSON.parse(req.body.apartmentData) as CreateApartmentDTO);
     res.status(201).json(apartment);
   } catch (err) {
     res.status(400).json({ error: 'Error creating apartment', details: err });

@@ -70,7 +70,7 @@ const ApartmentCard = ({ apartment, onClick }) => {
       >
         <CardMedia
           component="img"
-          image={'apartment.jpg'}
+          image={images && images.length > 0 ? images[0] : 'apartment.jpg'}
           alt={unitName}
           sx={{ 
             objectFit: 'contain',

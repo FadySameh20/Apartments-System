@@ -1,4 +1,4 @@
-import api from './axios';
+import api from "./axios";
 
 export const getApartments = async () => {
   const response = await api.get('/apartments');
@@ -8,4 +8,11 @@ export const getApartments = async () => {
 export const getApartment = async (id) => {
   const response = await api.get(`/apartments/${id}`);
   return response.data;
-}; 
+};
+
+export const createApartment = async (formData) => {
+  await api.post(
+    '/apartments', 
+    formData
+  );
+}
