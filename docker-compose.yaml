@@ -1,5 +1,22 @@
 version: '3'
 services:
+  postgres-db:
+    image: postgres:15
+    container_name: apartments-system-db
+    environment:
+      POSTGRES_DB: nawy
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "-d", "nawy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
   backend:
     image: nodejs-backend
     container_name: apartments-system-backend
@@ -15,22 +32,17 @@ services:
     volumes:
     - ./backend/src:/app/src
 
-  postgres-db:
-    image: postgres:15
-    container_name: apartments-system-db
-    environment:
-      POSTGRES_DB: nawy
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: pass
-    ports:
-      - "5432:5432"
+  frontend:
+    image: nextjs-frontend
+    build: ./frontend
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+        - ./frontend/src:/app/src
+        - /app/node_modules
+        - /app/.next
+    ports:
+      - "4000:4000"
+    depends_on:
+      - backend
   
 volumes:
   pgdata:
