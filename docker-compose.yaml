@@ -29,19 +29,26 @@ services:
       PORT: 3000
       DATABASE_URL: "postgresql://user:pass@postgres-db:5432/nawy"
     volumes:
-    - ./backend/src:/app/src
+      - ./backend/src:/app/src
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   frontend:
     container_name: apartments-system-frontend
     build: ./frontend
     volumes:
-        - ./frontend/src:/app/src
-        - /app/node_modules
-        - /app/.next
+      - ./frontend/src:/app/src
+      - /app/node_modules
+      - /app/.next
     ports:
       - "4000:4000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
   
 volumes:
   pgdata:

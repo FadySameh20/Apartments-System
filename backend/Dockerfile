@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . .
 
-CMD ["sh", "-c", "npx prisma generate && npx prisma migrate dev && npx prisma db seed && npm run dev"]
+RUN chmod +x /app/entrypoint.sh
+
+CMD ["/app/entrypoint.sh"]

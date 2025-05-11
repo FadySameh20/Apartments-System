@@ -26,7 +26,7 @@ const ImageGallery = ({ images, activeImageIndex, setActiveImageIndex }) => {
             height: { xs: '300px', md: '400px' },
             width: { xs: '300px', md: '400px' },
             borderRadius: 1,
-            margin: '0 auto'
+            margin: '0 auto',
           }}
         />
       </Box>
@@ -34,12 +34,14 @@ const ImageGallery = ({ images, activeImageIndex, setActiveImageIndex }) => {
       {/* Thumbnails */}
       {images && images.length > 1 && (
         <Box 
-          justifyContent={"center"}
+          justifyContent={"start"}
           sx={{ 
             display: 'flex',
             overflowX: 'auto',
             gap: 1,
             p: 1,
+            ml: 2,
+            mr: 2,
             bgcolor: alpha(theme.palette.primary.main, 0.05)
           }}
         >
