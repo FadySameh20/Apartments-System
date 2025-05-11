@@ -1,40 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Apartments-System
+A simple listing apartments website that allows users to see more details about each apartment.
 
-## Getting Started
+## Technologies
+  - **Docker**
+  - **Database**: Postgres
+  - **Backend**: Node.js + Typescript + Prisma (ORM)
+  - **Frontend**: Next.js
 
-First, run the development server:
+## Features
+  - List apartments with pagination (implemented in the backend) and the ability to search/filter using unit number, unit name or project.
+  - View apartment details.
+  - Create new apartments with the ability to uploading multiple images for the apartment.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Setup Instructions
+  1. Clone the repository.
+  ```
+  git clone https://github.com/FadySameh20/Apartments-System.git
+  ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  2. Navigate to the project's root directory.
+  ```
+  cd Apartments-System
+  ```
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+  3. Run the docker containers
+  ```
+  docker compose up
+  ```
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Notes & Assumptions
+  - Implemented the backend and frontend in separate folders inside the same repository so that you can run it with a single "docker compose" command.
+  **Ideally,** I would have separated them into two repositories and run each separately.
+  
+  - Environment variables are explicitly put inside the `docker-compose.yaml` file to make it easier for the reviewer to run the docker containers directly without having to manually add some environment variables.
+  **Ideally,** I would have created a separate `.env` file and `.env.example` for both the backend and frontend. The `.env` will be contain all the needed environment variables. In addition, it will git ignored and referenced in the `docker-compose.yaml` file.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+  - In the `entrypoint.sh` files used by the `Dockerfile`, I kept the commands that build and start the app (similar to what happens in production) while commented out the commands that runs the app in the development environment for faster development process (like hot reload).
+  **Ideally,** I would have created separate Dockerfiles for each environment: `Dockerfile.dev` and `Dockerfile.prod`.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+  - For uploading images when creating a new apartment, I intended to keep it simple by converting the uploaded images files from the frontend to a list of `base64` strings in the backend to be stored in the database.
+  **Ideally,** this might not be the most efficient approach because `base64` strings are quite large and that it is better to either store the uploaded images as binary files using `BYTEA` datatype in Postgres (would have created a separated table for storing images) or what is even better and most effiecient is to store them on cloud (such as: AWS S3 Buckets). However, for the scope of the task, I kept it simple.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Resources
+  - [Postman](https://app.getpostman.com/join-team?invite_code=10b5f4f4336f4c32571e82e59842a124da777e48435e5d02cbe5491c6f13e22a&target_code=ff5c4cae191eff54e241a7b270269e0d) (for backend APIs documentation)
