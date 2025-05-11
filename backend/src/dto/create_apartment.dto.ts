@@ -1,4 +1,4 @@
-interface CreateApartmentDTO {
+export interface CreateApartmentDTO {
   unitName: string;
   unitNumber: string;
   description?: string;
