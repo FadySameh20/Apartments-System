@@ -130,6 +130,7 @@ const ApartmentsListPage = () => {
           <SearchFilters 
             onFilterChange={handleFilterChange}
             onClearFilters={handleClearFilters}
+            initialFilters={initialFilters}
             filters={filters}
             projects={projects}
             loadingProjects={loadingProjects}
