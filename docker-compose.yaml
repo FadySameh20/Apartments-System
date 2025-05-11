@@ -1,0 +1,36 @@
+version: '3'
+services:
+  backend:
+    image: nodejs-backend
+    container_name: apartments-system-backend
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      PORT: 3000
+      DATABASE_URL: "postgresql://user:pass@postgres-db:5432/nawy"
+    volumes:
+    - ./backend/src:/app/src
+
+  postgres-db:
+    image: postgres:15
+    container_name: apartments-system-db
+    environment:
+      POSTGRES_DB: nawy
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  
+volumes:
+  pgdata:
