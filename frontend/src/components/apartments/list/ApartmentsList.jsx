@@ -111,7 +111,6 @@ const ApartmentsList = () => {
   return (
     <Box 
       sx={{ 
-        background: 'linear-gradient(to bottom, #f0f8ff, #e6f2ff)',
         minHeight: '100vh',
         py: { xs: 3, md: 6 }
       }}
