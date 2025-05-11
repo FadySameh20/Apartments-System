@@ -51,7 +51,22 @@ export const getApartment = async (req: Request, res: Response) => {
 export const createNewApartment = async (req: Request, res: Response) => {
   try {
     console.log("Creating a new apartment...");
-    const apartmentData = JSON.parse(req.body.apartmentData) as CreateApartmentDTO;
+    const rawData = req.body;
+
+    const apartmentData: CreateApartmentDTO = {
+      unitName: rawData.unitName,
+      unitNumber: rawData.unitNumber,
+      description: rawData.description,
+      price: parseInt(rawData.price),
+      area: parseInt(rawData.area),
+      bedroomsCount: parseInt(rawData.bedroomsCount),
+      bathroomsCount: parseInt(rawData.bathroomsCount),
+      floor: parseInt(rawData.floor),
+      isFinished: rawData.isFinished === 'true',
+      projectId: parseInt(rawData.projectId),
+      images: Array.isArray(rawData.images) ? rawData.images : [rawData.images],
+    };
+
     const files = req.files as Express.Multer.File[];
 
     // Check if apartment with same unit number exists
@@ -71,6 +86,7 @@ export const createNewApartment = async (req: Request, res: Response) => {
     const apartment = await apartmentService.createApartment(apartmentData);
     res.status(201).json(apartment);
   } catch (err) {
+    console.log(`Error creating apartment: ${err}`);
     res.status(400).json({ error: 'Error creating apartment', details: err });
   }
 };

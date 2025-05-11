@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { createApartment } from '../../api/apartments';
 import { getProjects } from '../../api/projects';
-import Layout from '@/components/layout/Layout';
 import BasicInfoFields from '@/components/apartments/form/BasicInfoFields';
 import PropertyDetailsFields from '@/components/apartments/form/PropertyDetailsFields';
 import ImageUploadSection from '@/components/apartments/form/ImageUploadSection';
@@ -147,21 +146,15 @@ const CreateApartmentPage = () => {
     try {
       const formDataToSend = new FormData();
       
-      const apartmentData = {
-        ...formData,
-        price: Number(formData.price),
-        area: Number(formData.area),
-        bedroomsCount: Number(formData.bedroomsCount),
-        bathroomsCount: Number(formData.bathroomsCount),
-        floor: Number(formData.floor),
-        projectId: Number(formData.projectId),
-      };
-      
-      formDataToSend.append('apartmentData', JSON.stringify(apartmentData));
+      Object.entries(formData).forEach(([key, value]) => {
+        formDataToSend.append(key, value);
+      });
+
       images.forEach((image) => {
         formDataToSend.append('images', image);
       });
 
+      console.log(formDataToSend);
       await createApartment(formDataToSend);
               
       setSuccess(true);
@@ -190,7 +183,7 @@ const CreateApartmentPage = () => {
   };
 
   return (
-    <Layout background="linear-gradient(to bottom, #f9f9f9, #ffffff)">
+    <>
       <Container sx={{ py: 4 }}>
         <Paper 
           elevation={3} 
@@ -280,7 +273,7 @@ const CreateApartmentPage = () => {
           Apartment created successfully!
         </Alert>
       </Snackbar>
-    </Layout>
+    </>
   );
 };
 

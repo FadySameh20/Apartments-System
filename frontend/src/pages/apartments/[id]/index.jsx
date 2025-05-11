@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import LoadingIndicator from '../../../components/common/LoadingIndicator';
 import { getApartment } from '../../../api/apartments';
-import Layout from '@/components/layout/Layout';
 import ImageGallery from '@/components/apartments/details/ImageGallery';
 import ApartmentHeader from '@/components/apartments/details/ApartmentHeader';
 import ApartmentDetails from '@/components/apartments/details/ApartmentDetails';
@@ -109,11 +108,9 @@ const ApartmentDetailsPage = () => {
   };
 
   return (
-    <Layout>
-      <Container sx={{ py: 4 }}>
-        {renderContent()}
-      </Container>
-    </Layout>
+    <Container sx={{ py: 4 }}>
+      {renderContent()}
+    </Container>
   );
 };
 
