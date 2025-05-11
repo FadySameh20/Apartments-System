@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use(cors({
-  origin: 'http://localhost:4000',
+  origin: process.env.FRONTEND_URL,
   methods: ['GET', 'POST', 'OPTIONS'],
 }));
 
