@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Box, Container, Typography, Pagination, useMediaQuery, useTheme, Paper, alpha, Grid } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, Pagination, useMediaQuery, useTheme, Grid } from '@mui/material';
 import ApartmentCard from './ApartmentCard';
-import LoadingIndicator from '../common/LoadingIndicator';
-import ErrorMessage from '../common/ErrorMessage';
+import LoadingIndicator from '../../common/LoadingIndicator';
+import ErrorMessage from '../../common/ErrorMessage';
 import SearchFilters from './SearchFilters';
-import { getApartments } from '../../api/apartments';
-import { getProjects } from '../../api/projects';
+import BrowseApartmentsHeader from './BrowseApartmentsHeader';
+import NoApartmentsFound from './NoApartmentsFound';
+import ResultsCounter from './ResultsCounter';
+import { getApartments } from '../../../api/apartments';
+import { getProjects } from '../../../api/projects';
 
 const initialFilters = {
   unitNumber: '',
@@ -23,32 +26,19 @@ const ApartmentsList = () => {
   const [filters, setFilters] = useState(initialFilters);
   const [projects, setProjects] = useState([]);
   const [loadingProjects, setLoadingProjects] = useState(false);
-  const projectsLoaded = useRef(false);
   
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const pageSize = isMobile ? 4 : 8;
   
-  // Fetch projects once
   useEffect(() => {
-    if (!projectsLoaded.current) {
-      const fetchProjects = async () => {
-        setLoadingProjects(true);
-        try {
-          const projectsData = await getProjects();
-          setProjects(projectsData);
-          projectsLoaded.current = true;
-        } catch (error) {
-          console.error('Error fetching projects:', error);
-        } finally {
-          setLoadingProjects(false);
-        }
-      };
-
-      fetchProjects();
-    }
+    fetchProjects();
   }, []);
   
+  useEffect(() => {
+    fetchApartments(page, filters);
+  }, [page, filters]);
+
   const fetchApartments = async (currentPage, currentFilters) => {
     try {
       setIsLoading(true);
@@ -70,10 +60,18 @@ const ApartmentsList = () => {
       setIsLoading(false);
     }
   };
-  
-  useEffect(() => {
-    fetchApartments(page, filters);
-  }, [page, filters]);
+
+  const fetchProjects = async () => {
+    setLoadingProjects(true);
+    try {
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    } finally {
+      setLoadingProjects(false);
+    }
+  }
   
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -118,38 +116,9 @@ const ApartmentsList = () => {
       }}
     >
       <Container maxWidth="lg">
-        <Paper 
-          elevation={0} 
-          sx={{ 
-            p: { xs: 2, md: 4 }, 
-            mb: 4, 
-            borderRadius: 3,
-            background: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 100%)',
-            color: 'white',
-            boxShadow: '0 10px 20px rgba(0,0,0,0.1)'
-          }}
-        >
-          <Typography 
-            variant="h4" 
-            component="h1" 
-            gutterBottom 
-            fontWeight="bold"
-            sx={{ 
-              fontSize: { xs: '1.75rem', md: '2.5rem' },
-              textShadow: '1px 1px 2px rgba(0,0,0,0.2)'
-            }}
-          >
-            Browse Apartments
-          </Typography>
-          <Typography 
-            variant="body1" 
-            sx={{ opacity: 0.9 }}
-          >
-            Discover your perfect home from our selection of apartments
-          </Typography>
-        </Paper>
+        <BrowseApartmentsHeader />
         
-        {/* Search filters - now handled responsively in the SearchFilters component */}
+        {/* Search filters */}
         <Box sx={{ mb: 4 }}>
           <SearchFilters 
             onFilterChange={handleFilterChange}
@@ -163,47 +132,11 @@ const ApartmentsList = () => {
         {isLoading && <LoadingIndicator />}
         
         {!isLoading && apartments.length === 0 ? (
-          <Paper 
-            sx={{ 
-              p: 4, 
-              textAlign: 'center',
-              borderRadius: 2,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-              background: alpha(theme.palette.error.light, 0.1)
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              No apartments found
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Try adjusting your filters to find more options.
-            </Typography>
-          </Paper>
+          <NoApartmentsFound />
         ) : (
           !isLoading && (
             <>
-              <Box 
-                sx={{ 
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 3,
-                  px: 2,
-                  py: 1.5,
-                  backgroundColor: alpha(theme.palette.primary.main, 0.1),
-                  borderRadius: 2
-                }}
-              >
-                <Typography 
-                  variant="subtitle1" 
-                  sx={{ 
-                    fontWeight: 'medium',
-                    color: theme.palette.primary.main
-                  }}
-                >
-                  Showing {apartments.length} of {totalCount} apartments
-                </Typography>
-              </Box>
+              <ResultsCounter count={apartments.length} total={totalCount} />
               
               <Grid container spacing={3}>
                 {apartments.map((apartment) => (
@@ -212,9 +145,7 @@ const ApartmentsList = () => {
                     size={12}
                     sx={{ display: 'flex' }}
                   >
-                    <ApartmentCard 
-                      apartment={apartment} 
-                    />
+                    <ApartmentCard apartment={apartment} />
                   </Grid>
                 ))}
               </Grid>
