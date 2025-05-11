@@ -16,10 +16,17 @@ import DesktopFilters from '../filters/DesktopFilters';
 /**
  * Search filters component for filtering apartments
  */
-const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, loadingProjects }) => {
+const SearchFilters = ({
+  onFilterChange,
+  onClearFilters,
+  initialFilters,
+  filters,
+  projects,
+  loadingProjects,
+ }) => {
   // Initialize tempFilters with properly defined projectId to avoid undefined
   const [tempFilters, setTempFilters] = useState(filters);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -39,11 +46,11 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
   const handleClearFilters = () => {
     onClearFilters();
     // Ensure all filter values are empty strings, not undefined
-    setTempFilters({
-      unitNumber: '',
-      unitName: '',
-      projectId: ''
-    });
+    setTempFilters(initialFilters);
+
+    if (isMobile) {
+      setMobileFiltersOpen(false);
+    }
   };
 
   const applyFilters = () => {
@@ -54,15 +61,17 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
     
     if(Object.keys(activeFilters).length !== 0) {
       onFilterChange(activeFilters);
+    } else {
+      onFilterChange(initialFilters);
     }
   
     if (isMobile) {
-      setMobileOpen(false);
+      setMobileFiltersOpen(false);
     }
   };
 
   const toggleMobileFilters = () => {
-    setMobileOpen(!mobileOpen);
+    setMobileFiltersOpen(!mobileFiltersOpen);
   };
 
   // Filters content based on device size
@@ -125,7 +134,7 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
 
           <Drawer
             anchor="bottom"
-            open={mobileOpen}
+            open={mobileFiltersOpen}
             onClose={toggleMobileFilters}
             PaperProps={{
               sx: { 
