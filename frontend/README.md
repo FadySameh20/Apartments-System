@@ -4,7 +4,7 @@ A simple listing apartments website that allows users to see more details about 
 ## Technologies
   - **Docker**
   - **Database**: Postgres
-  - **Backend**: Node.js + Typescript + Prisma (ORM)
+  - **Backend**: Node.js + Typescript + Express Framework + Prisma (ORM)
   - **Frontend**: Next.js
 
 ## Features
