@@ -44,7 +44,7 @@ export const getApartment = async (req: Request, res: Response) => {
     }
     res.json(apartment);
   } catch (err) {
-    res.status(500).json({ error: 'Error fetching apartment' });
+    res.status(500).json({ error: 'Failed to fetch apartment details' });
   }
 };
 
@@ -53,6 +53,12 @@ export const createNewApartment = async (req: Request, res: Response) => {
     console.log("Creating a new apartment...");
     const apartmentData = JSON.parse(req.body.apartmentData) as CreateApartmentDTO;
     const files = req.files as Express.Multer.File[];
+
+    // Check if apartment with same unit number exists
+    const existingApartment = await apartmentService.findApartmentByUnitNumber(apartmentData.unitNumber);
+    if (existingApartment) {
+      return res.status(409).json({ error: 'Apartment with the same unit number exists' });
+    }
 
     // Convert each file to base64
     const base64Images = files.map(file => {

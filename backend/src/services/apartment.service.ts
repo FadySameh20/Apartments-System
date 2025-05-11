@@ -72,3 +72,9 @@ export const getApartmentById = async (id: number) => {
 export const createApartment = async (data: CreateApartmentDTO) => {
   return await prisma.apartment.create({ data });
 };
+
+export const findApartmentByUnitNumber = async (unitNumber: string) => {
+  return await prisma.apartment.findUnique({
+    where: { unitNumber }
+  });
+};

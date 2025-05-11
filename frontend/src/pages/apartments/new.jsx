@@ -132,7 +132,7 @@ const CreateApartmentPage = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      setError('Please fix the errors in the form');
+      setError('Please make sure to fill the required fields in the form');
       return;
     }
 
@@ -183,7 +183,7 @@ const CreateApartmentPage = () => {
       });
     } catch (error) {
       console.error('Error submitting form:', error);
-      setError(error.message || 'An error occurred while creating the apartment');
+      setError(error.response.data.error || 'An error occurred while creating the apartment');
     } finally {
       setLoading(false);
     }
