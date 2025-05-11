@@ -74,6 +74,7 @@ const ApartmentsList = () => {
   }
   
   const handleFilterChange = (newFilters) => {
+    console.log(newFilters);
     setFilters(newFilters);
     setPage(1); // Reset to first page when applying new filters
   };

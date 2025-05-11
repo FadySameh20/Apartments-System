@@ -15,7 +15,7 @@ const DesktopFilters = ({
   applyFilters 
 }) => (
   <Grid container spacing={2} alignItems="center">
-    <Grid size={{xs: 12, sm: 3}}>
+    <Grid size={{xs: 12, sm: 6, md: 3}}>
       <TextField
         fullWidth
         label="Unit Number"
@@ -28,7 +28,7 @@ const DesktopFilters = ({
       />
     </Grid>
     
-    <Grid size={{xs: 12, sm: 3}}>
+    <Grid size={{xs: 12, sm: 6, md: 3}}>
       <TextField
         fullWidth
         label="Unit Name"
@@ -41,7 +41,7 @@ const DesktopFilters = ({
       />
     </Grid>
     
-    <Grid size={{xs: 12, sm: 3}}>
+    <Grid size={{xs: 12, sm: 6, md: 3}}>
       <ProjectSelector 
         value={tempFilters.projectId}
         onChange={handleInputChange}
@@ -50,7 +50,7 @@ const DesktopFilters = ({
       />
     </Grid>
     
-    <Grid size={{xs: 12, sm: 3}}>
+    <Grid size={{xs: 12, sm: 6, md: 3}}>
       <FilterActions onApply={applyFilters} onClear={handleClearFilters} />
     </Grid>
   </Grid>

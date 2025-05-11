@@ -17,14 +17,21 @@ import DesktopFilters from '../filters/DesktopFilters';
  * Search filters component for filtering apartments
  */
 const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, loadingProjects }) => {
-  const [tempFilters, setTempFilters] = useState(filters);
+  // Initialize tempFilters with properly defined projectId to avoid undefined
+  const [tempFilters, setTempFilters] = useState({
+    ...filters,
+    projectId: filters.projectId || ''
+  });
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   // Update tempFilters when filters change from parent
   useEffect(() => {
-    setTempFilters(filters);
+    setTempFilters({
+      ...filters,
+      projectId: filters.projectId || ''
+    });
   }, [filters]);
 
   const handleInputChange = (e) => {
@@ -33,7 +40,11 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
 
   const handleClearFilters = () => {
     onClearFilters();
-    setTempFilters(filters);
+    // Ensure projectId is '' not undefined when clearing
+    setTempFilters({
+      ...filters,
+      projectId: ''
+    });
   };
 
   const applyFilters = () => {
@@ -42,8 +53,13 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
       Object.entries(tempFilters).filter(([_, value]) => value !== '')
     );
     
-    onFilterChange(activeFilters);
-    
+    if(Object.keys(activeFilters).length !== 0) {
+      onFilterChange(activeFilters);
+    } else {
+      // If all filters are empty, apply an empty filter with projectId as empty string
+      onFilterChange({ projectId: '' });
+    }
+  
     if (isMobile) {
       setMobileOpen(false);
     }
@@ -112,11 +128,16 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
           </Button>
 
           <Drawer
-            anchor="right"
+            anchor="bottom"
             open={mobileOpen}
             onClose={toggleMobileFilters}
             PaperProps={{
-              sx: { width: '85%', maxWidth: '350px' }
+              sx: { 
+                width: '100%',
+                maxHeight: '80vh',
+                borderTopLeftRadius: '16px',
+                borderTopRightRadius: '16px',
+              }
             }}
           >
             {filtersContent}

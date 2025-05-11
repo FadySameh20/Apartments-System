@@ -29,6 +29,7 @@ const ApartmentCard = ({ apartment }) => {
     id,
     unitName,
     unitNumber,
+    description,
     price,
     images,
     isFinished,
@@ -156,8 +157,18 @@ const ApartmentCard = ({ apartment }) => {
           </Stack>
         </Box>
         
+        <Typography 
+          variant="body2" 
+          sx={{ 
+            color: theme.palette.text.secondary,
+            fontWeight: 500
+          }}
+        >
+          {description}
+        </Typography>
+
         <Box>
-          <Grid container spacing={2} mt={8} direction={"row"} justifyContent={"space-between"} alignItems="center">
+          <Grid container spacing={2} mt={4} direction={"row"} justifyContent={"space-between"} alignItems="center">
               <DeveloperInfo
                 developer={developer}
                 showTitle={false}
