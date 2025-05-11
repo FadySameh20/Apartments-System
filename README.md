@@ -38,6 +38,11 @@ A simple listing apartments website that allows users to see more details about 
   - In the `entrypoint.sh` files used by the `Dockerfile`, I kept the commands that build and start the app (similar to what happens in production) while commented out the commands that runs the app in the development environment for faster development process (like hot reload).
   **Ideally,** I would have created separate Dockerfiles for each environment: `Dockerfile.dev` and `Dockerfile.prod`.
 
+  - The database schema assumes the follwing:
+      - Apartment belongs to a Project.
+      - Project belongs to a Developer.
+      - Since that the requirements included 3 endpoints only, one of them is about creating a new apartment, I have seeded the database with two developers and two projects so that when creating a new apartment, you can select directly from the existing projects (added an extra endpoint for listing projects) for simplicity instead of choosing between adding a new endpoint for creating a new project or selecting an existing project. The added projects listing endpoint is also used in the search filters to filter by project.
+
   - For uploading images when creating a new apartment, I intended to keep it simple by converting the uploaded images files from the frontend to a list of `base64` strings in the backend to be stored in the database.
   **Ideally,** this might not be the most efficient approach because `base64` strings are quite large and that it is better to either store the uploaded images as binary files using `BYTEA` datatype in Postgres (would have created a separated table for storing images) or what is even better and most effiecient is to store them on cloud (such as: AWS S3 Buckets). However, for the scope of the task, I kept it simple.
 
