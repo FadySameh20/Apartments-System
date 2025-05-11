@@ -57,7 +57,8 @@ export const createNewApartment = async (req: Request, res: Response) => {
     // Check if apartment with same unit number exists
     const existingApartment = await apartmentService.findApartmentByUnitNumber(apartmentData.unitNumber);
     if (existingApartment) {
-      return res.status(409).json({ error: 'Apartment with the same unit number exists' });
+      res.status(409).json({ error: 'Apartment with the same unit number exists' });
+      return;
     }
 
     // Convert each file to base64

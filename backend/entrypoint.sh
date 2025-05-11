@@ -3,8 +3,13 @@ set -e
 
 npx prisma generate
 
-npx prisma migrate dev
+npx prisma migrate deploy
 
 npx prisma db seed
 
-npm run dev
+npm run build
+
+npm start
+
+## For development
+# npm run dev   # Instead of "npm run build" and "npm start"
