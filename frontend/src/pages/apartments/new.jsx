@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { createApartment } from '../../api/apartments';
 import { getProjects } from '../../api/projects';
-import Layout from '@/components/layout/Layout';
 import BasicInfoFields from '@/components/apartments/form/BasicInfoFields';
 import PropertyDetailsFields from '@/components/apartments/form/PropertyDetailsFields';
 import ImageUploadSection from '@/components/apartments/form/ImageUploadSection';
@@ -184,7 +183,7 @@ const CreateApartmentPage = () => {
   };
 
   return (
-    <Layout>
+    <>
       <Container sx={{ py: 4 }}>
         <Paper 
           elevation={3} 
@@ -274,7 +273,7 @@ const CreateApartmentPage = () => {
           Apartment created successfully!
         </Alert>
       </Snackbar>
-    </Layout>
+    </>
   );
 };
 

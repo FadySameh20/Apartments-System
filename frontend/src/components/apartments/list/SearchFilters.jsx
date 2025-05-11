@@ -18,10 +18,7 @@ import DesktopFilters from '../filters/DesktopFilters';
  */
 const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, loadingProjects }) => {
   // Initialize tempFilters with properly defined projectId to avoid undefined
-  const [tempFilters, setTempFilters] = useState({
-    ...filters,
-    projectId: filters.projectId || ''
-  });
+  const [tempFilters, setTempFilters] = useState(filters);
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -29,7 +26,8 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
   // Update tempFilters when filters change from parent
   useEffect(() => {
     setTempFilters({
-      ...filters,
+      unitNumber: filters.unitNumber || '',
+      unitName: filters.unitName || '',
       projectId: filters.projectId || ''
     });
   }, [filters]);
@@ -40,24 +38,22 @@ const SearchFilters = ({ onFilterChange, onClearFilters, filters, projects, load
 
   const handleClearFilters = () => {
     onClearFilters();
-    // Ensure projectId is '' not undefined when clearing
+    // Ensure all filter values are empty strings, not undefined
     setTempFilters({
-      ...filters,
+      unitNumber: '',
+      unitName: '',
       projectId: ''
     });
   };
 
   const applyFilters = () => {
-    // Send only non-empty filters to the backend
+        // Send only non-empty filters to the backend
     const activeFilters = Object.fromEntries(
       Object.entries(tempFilters).filter(([_, value]) => value !== '')
     );
     
     if(Object.keys(activeFilters).length !== 0) {
       onFilterChange(activeFilters);
-    } else {
-      // If all filters are empty, apply an empty filter with projectId as empty string
-      onFilterChange({ projectId: '' });
     }
   
     if (isMobile) {
